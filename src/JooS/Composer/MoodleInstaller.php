@@ -82,6 +82,7 @@ class MoodleInstaller extends LibraryInstaller
    */
   private function _installMoodleCode(PackageInterface $package)
   {
+    $copy = null;
     $copy = function ($from, $to) use ($copy)
     {
       if (is_dir($from)) {
