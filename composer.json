@@ -3,9 +3,6 @@
   "description" : "Composer installer for moodle packages", 
   "type": "composer-installer",
   "license": "MIT",
-  "require" : {
-    "covex-nn/joos-stream": "3.0.*"
-  }, 
   "require-dev" : {
     "composer/composer": "1.0.*@dev"
   },

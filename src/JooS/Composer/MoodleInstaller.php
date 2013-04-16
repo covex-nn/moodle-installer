@@ -6,6 +6,7 @@ use Composer\IO\IOInterface;
 use Composer\Composer;
 use Composer\Installer\LibraryInstaller;
 use Composer\Package\PackageInterface;
+use Composer\Util\Filesystem;
 
 use JooS\Stream\Wrapper_FS;
 use JooS\Stream\Wrapper_Exception;
@@ -78,36 +79,15 @@ class MoodleInstaller extends LibraryInstaller
    * 
    * @param PackageInterface $package Package
    * 
-   * @return boolean
+   * @return null
    */
   private function _installMoodleCode(PackageInterface $package)
   {
-    $copy = null;
-    $copy = function ($from, $to) use ($copy)
-    {
-      if (is_dir($from)) {
-        mkdir($to);
-        foreach (new \DirectoryIterator($from) as $fileInfo) {
-          /* @var $fileInfo \SplFileInfo */
-          if ($fileInfo->isDot()) {
-            continue;
-          }
-          $fileName = $fileInfo->getBasename();
-          
-          $copy($from . "/" . $fileName, $to . "/" . $fileName);
-        }
-      } else {
-        copy($from, $to);
-      }
-    };
-    
-    $action = function ($folder, $vendorPath) use ($copy) {
+    foreach ($this->_getExtraFolders($package) as $folder => $vendorPath) {
       if (file_exists($vendorPath)) {
-        $copy($vendorPath, self::MOODLE_STREAM . "://" . $folder);
+        $this->_copyDirectory($vendorPath, $folder);
       }
-    };
-    
-    return $this->_filesTransaction($package, $action);
+    }
   }
   
   /**
@@ -119,42 +99,37 @@ class MoodleInstaller extends LibraryInstaller
    */
   private function _removeMoodleCode(PackageInterface $package)
   {
-    $files = new Files;
-    $action = function ($folder, $vendorPath) use ($files) {
-      if (file_exists($folder)) {
-        $files->delete($folder);
-      }
-    };
-    
-    return $this->_filesTransaction($package, $action);
+    $filesystem = $this->filesystem;
+    /* @var $filesystem Filesystem */
+    foreach ($this->_getExtraFolders($package) as $folder => $vendorPath) {
+      $filesystem->remove($folder);
+    }
   }
   
   /**
-   * Run operations with files
+   * Copy one directory to another
    * 
-   * @param callable $action Action
+   * @param string $from Source
+   * @param string $to   Destination
    * 
-   * @return boolean
+   * @return null
    */
-  private function _filesTransaction(PackageInterface $package, $action)
+  private function _copyDirectory($from, $to)
   {
-    Wrapper_FS::register(self::MOODLE_STREAM, realpath("."));
-    try {
-      $extraFolders = $this->_getExtraFolders($package);
-      foreach ($extraFolders as $folder => $vendorPath) {
-        $action($folder, $vendorPath);
+    if (is_dir($from)) {
+      mkdir($to);
+      foreach (new \DirectoryIterator($from) as $fileInfo) {
+        /* @var $fileInfo \SplFileInfo */
+        if ($fileInfo->isDot()) {
+          continue;
+        }
+        $fileName = $fileInfo->getBasename();
+
+        $this->_copyDirectory($from . "/" . $fileName, $to . "/" . $fileName);
       }
-      $success = true;
-    } catch (Wrapper_Exception $exception) {
-      $success = false;
+    } else {
+      copy($from, $to);
     }
-    
-    if ($success) {
-      Wrapper_FS::commit(self::MOODLE_STREAM);
-    }
-    Wrapper_FS::unregister(self::MOODLE_STREAM);
-    
-    return $success;
   }
     
   /**
