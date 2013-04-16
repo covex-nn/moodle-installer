@@ -6,16 +6,9 @@ use Composer\IO\IOInterface;
 use Composer\Composer;
 use Composer\Installer\LibraryInstaller;
 use Composer\Package\PackageInterface;
-use Composer\Util\Filesystem;
-
-use JooS\Stream\Wrapper_FS;
-use JooS\Stream\Wrapper_Exception;
-use JooS\Files;
 
 class MoodleInstaller extends LibraryInstaller
 {
-  
-  const MOODLE_STREAM = "moodle-stream";
   
   const MOODLE_MODULES = "moodle-modules";
   
@@ -24,13 +17,14 @@ class MoodleInstaller extends LibraryInstaller
   /**
    * Initializes moodle installer.
    *
-   * @param IOInterface $io       io instance
-   * @param Composer    $composer
-   * @param string      $type     package type that this installer handles
+   * @param IOInterface $cio      ComposerIO instance
+   * @param Composer    $composer Composer
+   * @param string      $type     Package type that this installer handles
    */
-  public function __construct(IOInterface $io, Composer $composer, $type = self::MOODLE_TYPE)
+  public function __construct(IOInterface $cio, Composer $composer, $type='library')
   {
-    parent::__construct($io, $composer, self::MOODLE_TYPE);
+    $type = self::MOODLE_TYPE;
+    parent::__construct($cio, $composer, $type);
   }
 
   /**
@@ -83,7 +77,8 @@ class MoodleInstaller extends LibraryInstaller
    */
   private function _installMoodleCode(PackageInterface $package)
   {
-    foreach ($this->_getExtraFolders($package) as $folder => $vendorPath) {
+    $extraFolders = $this->_getExtraFolders($package);
+    foreach ($extraFolders as $folder => $vendorPath) {
       if (file_exists($vendorPath)) {
         $this->_copyDirectory($vendorPath, $folder);
       }
@@ -100,8 +95,9 @@ class MoodleInstaller extends LibraryInstaller
   private function _removeMoodleCode(PackageInterface $package)
   {
     $filesystem = $this->filesystem;
-    /* @var $filesystem Filesystem */
-    foreach ($this->_getExtraFolders($package) as $folder => $vendorPath) {
+    /* @var $filesystem \Composer\Util\Filesystem */
+    $extraFolders = $this->_getExtraFolders($package);
+    foreach (array_keys($extraFolders) as $folder) {
       $filesystem->remove($folder);
     }
   }
