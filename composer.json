@@ -1,0 +1,31 @@
+{
+  "name": "covex-nn/moodle-installer",
+  "description" : "Composer installer for moodle packages", 
+  "type": "composer-installer",
+  "license": "MIT",
+  "require" : {
+    "covex-nn/joos-stream": "3.0.*"
+  }, 
+  "require-dev" : {
+    "composer/composer": "1.0.*@dev"
+  },
+  "repositories": [
+    {
+      "type" : "git", 
+      "url" : "https://github.com/composer/composer"
+    }
+  ], 
+  "authors": [
+    {
+      "name": "Andrey F. Mindubaev",
+      "email": "andrey.mindubaev@apnet.ru",
+      "homepage": "http://github.com/covex-nn"
+    }
+  ],
+  "autoload": {
+    "psr-0": { "JooS\\Composer": "src/" }
+  },
+  "extra": {
+    "class": "JooS\\Composer\\MoodleInstaller"
+  }
+}
