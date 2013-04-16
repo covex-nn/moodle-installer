@@ -1,6 +1,6 @@
 <?php
 
-namespace JooS\Installer;
+namespace JooS\Composer;
 
 use Composer\IO\IOInterface;
 use Composer\Composer;
