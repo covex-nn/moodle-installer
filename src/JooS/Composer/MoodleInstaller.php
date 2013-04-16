@@ -113,7 +113,7 @@ class MoodleInstaller extends LibraryInstaller
   private function _copyDirectory($from, $to)
   {
     if (is_dir($from)) {
-      mkdir($to);
+      mkdir($to, 0777, true);
       foreach (new \DirectoryIterator($from) as $fileInfo) {
         /* @var $fileInfo \SplFileInfo */
         if ($fileInfo->isDot()) {
