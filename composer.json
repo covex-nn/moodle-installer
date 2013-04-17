@@ -25,5 +25,8 @@
   },
   "extra": {
     "class": "JooS\\Composer\\MoodleInstaller"
+  }, 
+  "config" : {
+    "bin-dir" : "bin"
   }
 }

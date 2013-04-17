@@ -1,14 +1,14 @@
 <?php
 
-namespace JooS\Composer;
+namespace JooS\Composer\Event;
 
 use JooS\Stream\Wrapper_FS;
 
-class HtaccessEventTest extends \PHPUnit_Framework_TestCase
+class HtaccessTest extends \PHPUnit_Framework_TestCase
 {
   
   /**
-   * @var HtaccessEvent
+   * @var Htaccess
    */
   private $_htaccess;
   
@@ -59,7 +59,7 @@ class HtaccessEventTest extends \PHPUnit_Framework_TestCase
     Wrapper_FS::register("htaccess");
     mkdir("htaccess://folder");
     
-    $this->_htaccess = new HtaccessEvent(
+    $this->_htaccess = new Htaccess(
       $this->_htaccessPath()
     );
   }

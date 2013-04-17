@@ -1,10 +1,10 @@
 <?php
 
-namespace JooS\Composer;
+namespace JooS\Composer\Event;
 
 use Composer\Script\Event;
 
-class HtaccessEvent
+class Htaccess
 {
   
   /**
@@ -158,7 +158,7 @@ class HtaccessEvent
    * 
    * @param string $path Path to .htaccess
    * 
-   * @return HtaccessEvent
+   * @return Htaccess
    */
   protected function _setPath($path)
   {

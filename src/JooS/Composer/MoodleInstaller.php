@@ -12,6 +12,7 @@ class MoodleInstaller extends LibraryInstaller
 {
   
   const MOODLE_MODULES = "moodle-modules";
+  const MOODLE_DIR = "moodle-dir";
   
   const TYPE_MOODLE_PACKAGE = "moodle-package";
   const TYPE_MOODLE_SOURCE = "moodle-source";
@@ -139,7 +140,7 @@ class MoodleInstaller extends LibraryInstaller
     $extraFolders = $this->_getExtraFolders($package);
     foreach ($extraFolders as $folder => $vendorPath) {
       if (file_exists($vendorPath)) {
-        $this->_createSymlink($vendorPath, $folder);
+        self::createSymlink($vendorPath, $folder);
       }
     }
   }
@@ -176,7 +177,11 @@ class MoodleInstaller extends LibraryInstaller
    * 
    * @return boolean
    */
-  private function _createSymlink($from, $to) {
+  public static function createSymlink($from, $to) {
+    if (file_exists($to)) {
+      return false;
+    }
+    
     $parts = explode("/", $to);
     array_pop($parts);
     
@@ -246,7 +251,7 @@ class MoodleInstaller extends LibraryInstaller
   {
     $composer = $this->composer;
     /* @var $composer Composer */
-    $moodleDir = $composer->getConfig()->get("moodle-dir");
+    $moodleDir = $composer->getConfig()->get(self::MOODLE_DIR);
     if (!$moodleDir) {
       $moodleDir = "www";
     }
