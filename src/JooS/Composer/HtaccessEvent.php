@@ -17,13 +17,15 @@ class HtaccessEvent
   public static function denyFromAll(Event $event)
   {
     $composer = $event->getComposer();
-    $path = $composer->getConfig()->get("vendor-dir");
+    
+    $vendor = $composer->getConfig()->get("vendor-dir");
+    $path =  $vendor . "/.htaccess";
 
     $htaccess = new self($path);
     $htaccess->append("Deny from all");
     
     $composerIo = $event->getIO();
-    $composerIo->write(".htaccess created in vendor-dir");
+    $composerIo->write("File " . $path . " created, HTTP access denied");
   }
   
   /**
@@ -133,7 +135,7 @@ class HtaccessEvent
   {
     $path = $this->getPath();
     if ($this->exists()) {
-      $writable = is_writable($path);
+      $writable = is_file($path) && is_writable($path);
     } else {
       $dir = dirname($path);
       $writable = is_writable($dir);
