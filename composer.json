@@ -4,7 +4,8 @@
   "type": "composer-installer",
   "license": "MIT",
   "require-dev" : {
-    "composer/composer": "1.0.*@dev"
+    "composer/composer": "1.0.*@dev", 
+    "covex-nn/joos-stream" : ">=3.0.3"
   },
   "repositories": [
     {
