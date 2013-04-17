@@ -156,7 +156,14 @@ class MoodleInstaller extends LibraryInstaller
     $extraFolders = $this->_getExtraFolders($package);
     foreach (array_keys($extraFolders) as $folder) {
       if (file_exists($folder) && is_link($folder)) {
-        unlink($folder);
+        $target = readlink($folder);
+        do {
+          $newTarget = dirname($target) . "/" . uniqid(basename($target));
+        } while (!file_exists($newTarget));
+        
+        rename($target, $newTarget);
+        rmdir($folder);
+        rename($newTarget, $target);
       }
     }
   }
