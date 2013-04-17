@@ -6,6 +6,7 @@ use Composer\IO\IOInterface;
 use Composer\Composer;
 use Composer\Installer\LibraryInstaller;
 use Composer\Package\PackageInterface;
+use Composer\Repository\InstalledRepositoryInterface;
 
 class MoodleInstaller extends LibraryInstaller
 {
@@ -46,6 +47,32 @@ class MoodleInstaller extends LibraryInstaller
         $installPath = parent::getInstallPath($package);
     }
     return $installPath;
+  }
+  
+  /**
+   * Updates specific package.
+   *
+   * @param InstalledRepositoryInterface $repo    repository in which to check
+   * @param PackageInterface             $initial already installed package version
+   * @param PackageInterface             $target  updated version
+   *
+   * @return null
+   * @throws InvalidArgumentException if $from package is not installed
+   */
+  public function update(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target)
+  {
+    if ($initial->getType() == self::TYPE_MOODLE_SOURCE) {
+      $packages = $repo->search(
+        array("type" => self::TYPE_MOODLE_PACKAGE)
+      );
+      if (sizeof($packages)) {
+        throw new \InvalidArgumentException(
+          "Package '" . self::TYPE_MOODLE_SOURCE . "' can not be upgraded. " . 
+          "Uninstall all packages '" . self::TYPE_MOODLE_PACKAGE . "' first"
+        );
+      }
+    }
+    parent::update($repo, $initial, $target);
   }
   
   /**
