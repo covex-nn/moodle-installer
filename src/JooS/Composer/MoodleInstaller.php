@@ -159,7 +159,7 @@ class MoodleInstaller extends LibraryInstaller
         $target = readlink($folder);
         do {
           $newTarget = dirname($target) . "/" . uniqid(basename($target));
-        } while (!file_exists($newTarget));
+        } while (file_exists($newTarget));
         
         rename($target, $newTarget);
         rmdir($folder);
