@@ -25,9 +25,5 @@
   },
   "extra": {
     "class": "JooS\\Composer\\MoodleInstaller"
-  }, 
-  "scripts" : {
-    "post-install-cmd" : "JooS\\Composer\\HtaccessEvent::denyFromAll", 
-    "post-update-cmd" : "JooS\\Composer\\HtaccessEvent::denyFromAll"
   }
 }

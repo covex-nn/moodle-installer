@@ -12,21 +12,42 @@ class MoodleInstaller extends LibraryInstaller
   
   const MOODLE_MODULES = "moodle-modules";
   
-  const MOODLE_TYPE = "moodle-package";
+  const TYPE_MOODLE_PACKAGE = "moodle-package";
+  const TYPE_MOODLE_SOURCE = "moodle-source";
+  
 
-  /**
-   * Initializes moodle installer.
-   *
-   * @param IOInterface $cio      ComposerIO instance
-   * @param Composer    $composer Composer
-   * @param string      $type     Package type that this installer handles
-   */
-  public function __construct(IOInterface $cio, Composer $composer, $type='library')
+  public function supports($packageType)
   {
-    $type = self::MOODLE_TYPE;
-    parent::__construct($cio, $composer, $type);
+    switch ($packageType) {
+      case self::TYPE_MOODLE_PACKAGE:
+      case self::TYPE_MOODLE_SOURCE:
+        $supports = true;
+        break;
+      default:
+        $supports = false;
+    }
+    return $supports;
   }
-
+  
+  /**
+   * Returns the installation path of a package
+   *
+   * @param  PackageInterface $package Package
+   * 
+   * @return string
+   */
+  public function getInstallPath(PackageInterface $package)
+  {
+    switch ($package->getType()) {
+      case self::TYPE_MOODLE_SOURCE:
+        $installPath = $this->_getMoodleDir();
+        break;
+      default:
+        $installPath = parent::getInstallPath($package);
+    }
+    return $installPath;
+  }
+  
   /**
    * Install package code
    * 
@@ -37,7 +58,10 @@ class MoodleInstaller extends LibraryInstaller
   protected function installCode(PackageInterface $package)
   {
     parent::installCode($package);
-    $this->_installMoodleCode($package);
+    
+    if ($package->getType() == self::TYPE_MOODLE_PACKAGE) {
+      $this->_installMoodleCode($package);
+    }
   }
 
   /**
@@ -50,9 +74,15 @@ class MoodleInstaller extends LibraryInstaller
    */
   protected function updateCode(PackageInterface $initial, PackageInterface $target)
   {
-    $this->_removeMoodleCode($initial);
+    if ($initial->getType() == self::TYPE_MOODLE_PACKAGE) {
+      $this->_removeMoodleCode($initial);
+    }
+    
     parent::updateCode($initial, $target);
-    $this->_installMoodleCode($target);
+    
+    if ($target->getType() == self::TYPE_MOODLE_PACKAGE) {
+      $this->_installMoodleCode($target);
+    }
   }
 
   /**
@@ -64,10 +94,12 @@ class MoodleInstaller extends LibraryInstaller
    */
   protected function removeCode(PackageInterface $package)
   {
-    $this->_removeMoodleCode($package);
+    if ($package->getType() == self::TYPE_MOODLE_PACKAGE) {
+      $this->_removeMoodleCode($package);
+    }
     parent::removeCode($package);
   }
-
+  
   /**
    * Install code
    * 
@@ -145,19 +177,35 @@ class MoodleInstaller extends LibraryInstaller
     } else {
       $folders = $extra[self::MOODLE_MODULES];
     }
-    
+
+    $moodleDir = $this->_getMoodleDir();
     $extraFolders = array();
     
     $downloadPath = $this->getInstallPath($package);
     foreach ($folders as $key => $value) {
-      
       $key = str_replace(DIRECTORY_SEPARATOR, "/", $key);
       $value = str_replace(DIRECTORY_SEPARATOR, "/", $value);
       
-      $extraFolders[$key] = $downloadPath . "/" . $value;
+      $extraFolders[$moodleDir . "/" . $key] = $downloadPath . "/" . $value;
     }
     
     return $extraFolders;
+  }
+
+  /**
+   * Return moodle installation dir
+   * 
+   * @return string
+   */
+  private function _getMoodleDir()
+  {
+    $composer = $this->composer;
+    /* @var $composer Composer */
+    $moodleDir = $composer->getConfig()->get("moodle-dir");
+    if (!$moodleDir) {
+      $moodleDir = "www";
+    }
+    return $moodleDir;
   }
   
 }
