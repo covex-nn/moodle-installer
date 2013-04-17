@@ -139,7 +139,7 @@ class MoodleInstaller extends LibraryInstaller
     $extraFolders = $this->_getExtraFolders($package);
     foreach ($extraFolders as $folder => $vendorPath) {
       if (file_exists($vendorPath)) {
-        $this->_copyDirectory($vendorPath, $folder);
+        $this->_createSymlink($vendorPath, $folder);
       }
     }
   }
@@ -153,42 +153,52 @@ class MoodleInstaller extends LibraryInstaller
    */
   private function _removeMoodleCode(PackageInterface $package)
   {
-    $filesystem = $this->filesystem;
-    /* @var $filesystem \Composer\Util\Filesystem */
     $extraFolders = $this->_getExtraFolders($package);
     foreach (array_keys($extraFolders) as $folder) {
-      $filesystem->remove($folder);
+      if (file_exists($folder) && is_link($folder)) {
+        unlink($folder);
+      }
     }
   }
   
   /**
-   * Copy one directory to another
+   * Create symlink
    * 
-   * @param string $from Source
-   * @param string $to   Destination
+   * @param type $from Source
+   * @param type $to   Destination link
    * 
-   * @return null
+   * @return boolean
    */
-  private function _copyDirectory($from, $to)
-  {
-    if (is_dir($from)) {
-      mkdir($to, 0777, true);
-      foreach (new \DirectoryIterator($from) as $fileInfo) {
-        /* @var $fileInfo \SplFileInfo */
-        if ($fileInfo->isDot()) {
-          continue;
-        }
-        $fileName = $fileInfo->getBasename();
-
-        $this->_copyDirectory($from . "/" . $fileName, $to . "/" . $fileName);
-      }
-    } else {
-      copy($from, $to);
-    }
-  }
+  private function _createSymlink($from, $to) {
+    $parts = explode("/", $to);
+    array_pop($parts);
     
+    $create = array();
+    while (sizeof($parts)) {
+      $path = implode("/", $parts);
+
+      if (file_exists($path)) {
+        break;
+      } else {
+        $create[] = array_pop($parts);
+        if (!sizeof($parts)) {
+          $path = ".";
+        }
+      }
+    }
+    
+    foreach (array_reverse($create) as $folder) {
+      $path .= "/" . $folder;
+      mkdir($path, 0777);
+    }
+    
+    return symlink(realpath($from), $to);
+  }
+  
   /**
    * Return array of folder paths
+   * 
+   * Key - moodle-dir/folder, Value - vendor-dir/folder
    * 
    * @param PackageInterface $package Package
    * 
@@ -210,9 +220,10 @@ class MoodleInstaller extends LibraryInstaller
     
     $downloadPath = $this->getInstallPath($package);
     foreach ($folders as $key => $value) {
-      $key = str_replace(DIRECTORY_SEPARATOR, "/", $key);
-      $value = str_replace(DIRECTORY_SEPARATOR, "/", $value);
-      
+      if (DIRECTORY_SEPARATOR != "/") {
+        $key = str_replace(DIRECTORY_SEPARATOR, "/", $key);
+        $value = str_replace(DIRECTORY_SEPARATOR, "/", $value);
+      }
       $extraFolders[$moodleDir . "/" . $key] = $downloadPath . "/" . $value;
     }
     
