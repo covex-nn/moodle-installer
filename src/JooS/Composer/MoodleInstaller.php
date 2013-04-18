@@ -181,18 +181,18 @@ class MoodleInstaller extends LibraryInstaller
   /**
    * Create symlink
    * 
-   * @param type $from Source
-   * @param type $to   Destination link
+   * @param type $target Source
+   * @param type $link   Destination link
    * 
    * @return boolean
    */
-  public static function createSymlink($from, $to)
+  public static function createSymlink($target, $link)
   {
-    if (file_exists($to)) {
+    if (file_exists($link)) {
       return false;
     }
-    
-    $parts = explode("/", $to);
+
+    $parts = explode("/", $link);
     array_pop($parts);
     
     $create = array();
@@ -214,7 +214,7 @@ class MoodleInstaller extends LibraryInstaller
       mkdir($path, 0777);
     }
     
-    return symlink(realpath($from), $to);
+    return symlink(realpath($target), $link);
   }
   
   /**
