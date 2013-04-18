@@ -8,6 +8,15 @@ use JooS\Composer\MoodleInstaller;
 class Developer
 {
 
+  /**
+   * Composer event handler
+   * 
+   * Create symlinks to moodle modules into moodle-dir
+   * 
+   * @param \Composer\Script\Event $event Event
+   * 
+   * @return null
+   */
   public static function createSymlinks(Event $event)
   {
     $composer = $event->getComposer();

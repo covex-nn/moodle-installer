@@ -17,7 +17,13 @@ class MoodleInstaller extends LibraryInstaller
   const TYPE_MOODLE_PACKAGE = "moodle-package";
   const TYPE_MOODLE_SOURCE = "moodle-source";
   
-
+  /**
+   * Decides if the installer supports the given type
+   *
+   * @param string $packageType Package type
+   * 
+   * @return boolean
+   */
   public function supports($packageType)
   {
     switch ($packageType) {
@@ -34,7 +40,7 @@ class MoodleInstaller extends LibraryInstaller
   /**
    * Returns the installation path of a package
    *
-   * @param  PackageInterface $package Package
+   * @param PackageInterface $package Package
    * 
    * @return string
    */
@@ -180,7 +186,8 @@ class MoodleInstaller extends LibraryInstaller
    * 
    * @return boolean
    */
-  public static function createSymlink($from, $to) {
+  public static function createSymlink($from, $to)
+  {
     if (file_exists($to)) {
       return false;
     }

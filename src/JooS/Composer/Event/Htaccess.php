@@ -10,7 +10,7 @@ class Htaccess
   /**
    * Create .htaccess and write 'Deny from all'
    * 
-   * @param Event $event
+   * @param Event $event Event
    * 
    * @return null
    */
@@ -44,11 +44,12 @@ class Htaccess
   }
 
   /**
+   * Append string to .htaccess
    * 
-   * @param type $string
+   * @param string $string .htaccess instruction
    * 
    * @return boolean
-   * @todo сделать более интеллектуальненько =)
+   * @todo сделать более интеллектуальненько, чтоли =)
    */
   public function append($string)
   {
@@ -99,6 +100,11 @@ class Htaccess
     return $contents;
   }
   
+  /**
+   * Return file contents as array
+   * 
+   * @return string
+   */
   public function getContentsArray()
   {
     $contents = $this->getContents();
