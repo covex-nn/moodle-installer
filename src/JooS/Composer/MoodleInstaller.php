@@ -163,7 +163,9 @@ class MoodleInstaller extends LibraryInstaller
         } while (file_exists($newTarget));
         
         rename($target, $newTarget);
-        rmdir($folder);
+        if (!@rmdir($folder)) {
+          unlink($folder);
+        }
         rename($newTarget, $target);
       }
     }
