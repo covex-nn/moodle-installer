@@ -164,6 +164,7 @@ class MoodleInstaller extends LibraryInstaller
         
         rename($target, $newTarget);
         if (!@rmdir($folder)) {
+          clearstatcache();
           unlink($folder);
         }
         rename($newTarget, $target);
