@@ -9,6 +9,7 @@
   }, 
   "require-dev" : {
     "composer/composer": "1.0.*@dev", 
+    "covex-nn/joos-stream" : ">=3.0.3", 
     "theseer/directoryscanner" : "1.1.0"
   },
   "repositories": [
