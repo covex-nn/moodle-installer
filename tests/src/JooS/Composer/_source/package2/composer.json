@@ -1,0 +1,11 @@
+{
+  "name" : "covex-nn/moodle-package-test", 
+  "type" : "moodle-package", 
+  "license" : "MIT", 
+  "description" : "Test moodle package", 
+  "extra" : {
+    "moodle-modules" : {
+      "second-dir-in-www" : "second-dir-in-package"
+    }
+  }
+}

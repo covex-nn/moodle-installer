@@ -8,6 +8,8 @@ use Composer\Installer\LibraryInstaller;
 use Composer\Package\PackageInterface;
 use Composer\Repository\InstalledRepositoryInterface;
 
+use JooS\Files;
+
 class MoodleInstaller extends LibraryInstaller
 {
   
@@ -160,20 +162,12 @@ class MoodleInstaller extends LibraryInstaller
    */
   private function _removeMoodleCode(PackageInterface $package)
   {
+    $files = new Files();
+    
     $extraFolders = $this->_getExtraFolders($package);
     foreach (array_keys($extraFolders) as $folder) {
-      if (file_exists($folder) && is_link($folder)) {
-        $target = readlink($folder);
-        do {
-          $newTarget = dirname($target) . "/" . uniqid(basename($target));
-        } while (file_exists($newTarget));
-        
-        rename($target, $newTarget);
-        if (!@rmdir($folder)) {
-          clearstatcache();
-          unlink($folder);
-        }
-        rename($newTarget, $target);
+      if (file_exists($folder)) {
+        $files->delete($folder);
       }
     }
   }

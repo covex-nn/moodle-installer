@@ -3,9 +3,13 @@
   "description" : "Composer installer for moodle packages", 
   "type": "composer-installer",
   "license": "MIT",
+  "require" : {
+    "php" : ">=5.3.3", 
+    "covex-nn/joos" : ">=3.0.9"
+  }, 
   "require-dev" : {
     "composer/composer": "1.0.*@dev", 
-    "covex-nn/joos-stream" : ">=3.0.3"
+    "theseer/directoryscanner" : "1.1.0"
   },
   "repositories": [
     {
