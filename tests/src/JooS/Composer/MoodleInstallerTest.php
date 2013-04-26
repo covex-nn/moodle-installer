@@ -99,15 +99,22 @@ class MoodleInstallerTest extends \PHPUnit_Framework_TestCase
     $this->assertFileExists($targetOne);
     $this->assertEquals($targetOne, $actualTargetOne);
     
+    $packageTwo = $this->_createPackageMockFromDir(
+      __DIR__ . "/_source/package2"
+    );
+    
     $repository
         ->expects($this->any())
         ->method("hasPackage")
         ->with($packageOne)
         ->will($this->returnValue(true));
+
+    $repository
+        ->expects($this->any())
+        ->method("hasPackage")
+        ->with($packageTwo)
+        ->will($this->returnValue(false));
     
-    $packageTwo = $this->_createPackageMockFromDir(
-      __DIR__ . "/_source/package2"
-    );
     // update package1 with package2
     $moodle->update($repository, $packageOne, $packageTwo);
 
