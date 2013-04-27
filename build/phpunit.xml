@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit
-  backupGlobals="false"
-  backupStaticAttributes="false"
-  strict="true"
-  verbose="true"
-  bootstrap="../tests/bootstrap.php"
->
+<phpunit backupGlobals="false" strict="true" verbose="true" bootstrap="../tests/bootstrap.php">
   <testsuites>
-    <testsuite name="Project Test Suite">
-      <directory>../tests</directory>
+    <testsuite name="PHPUnit">
+      <directory suffix="Test.php">../tests</directory>
     </testsuite>
   </testsuites>
 
@@ -19,8 +13,11 @@
   </logging>
 
   <filter>
-    <whitelist>
+    <whitelist addUncoveredFilesFromWhitelist="true">
       <directory>../src</directory>
     </whitelist>
+    <blacklist>
+      <directory>../tests</directory>
+    </blacklist>
   </filter>
 </phpunit>

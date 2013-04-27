@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
   <property name="system.php" value="php" />
-  <property name="system.composer" value="~/composer.phar" />
+  <property name="system.composer" value="${user.home}/composer.phar" />
   
   <macrodef name="composer">
     <attribute name="command" />

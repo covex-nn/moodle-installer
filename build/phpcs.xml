@@ -13,9 +13,6 @@
  </rule>
 
  <rule ref="Zend.NamingConventions.ValidVariableName" />
-<!--
-  <rule ref="Squiz.Commenting.ClassComment" />
--->
  
  <rule ref="PEAR.WhiteSpace.ScopeClosingBrace">
   <properties>

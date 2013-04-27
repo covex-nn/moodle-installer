@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="covex-nn/moodle-installer" default="init" basedir=".">
   <property file="build.local.properties" />
+  <property file="build.required.properties" />
   <property file="build.properties" />
   
   <import file="${lib.path.contrib}/contrib.ant" />

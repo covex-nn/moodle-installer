@@ -1,6 +1,6 @@
 /bin
-/build/ci
-/build/build.local.properties
 /composer.lock
 /nbproject
+/target
 /vendor
+/www
