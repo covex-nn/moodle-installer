@@ -89,7 +89,7 @@
         "source" : {
           "url" : "git://github.com/covex-nn/phpdox.git", 
           "type" : "git", 
-          "reference" : "composer3"
+          "reference" : "composer2"
         }, 
         "autoload" : {
           "classmap" : [ "src/" ]
