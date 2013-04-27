@@ -31,7 +31,10 @@
     "psr-0": { "JooS\\Composer\\": "src/" }
   },
   "extra": {
-    "class": "JooS\\Composer\\MoodleInstaller"
+    "class": "JooS\\Composer\\MoodleInstaller", 
+    "branch-alias": {
+      "dev-master": "1.2.x-dev"
+    }
   }, 
   "config" : {
     "bin-dir" : "bin"
