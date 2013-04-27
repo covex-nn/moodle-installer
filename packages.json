@@ -6,7 +6,7 @@
         "type" : "moodle-source", 
         "version" : "2.4.3", 
         "require" : {
-          "covex-nn/moodle-installer": "1.1.*"
+          "covex-nn/moodle-installer": ">=1.0"
         }, 
         "dist" : {
           "url" : "https://github.com/moodle/moodle/archive/v2.4.3.zip",
