@@ -8,15 +8,61 @@
         "require" : {
           "covex-nn/moodle-installer": "1.1.*"
         }, 
-        "dist": {
-          "url": "https://github.com/moodle/moodle/archive/v2.4.3.zip",
-          "type": "zip"
+        "dist" : {
+          "url" : "https://github.com/moodle/moodle/archive/v2.4.3.zip",
+          "type" : "zip"
         },
-        "source": {
-          "url": "git://github.com/moodle/moodle.git",
-          "type": "git",
-          "reference": "v2.4.3"
+        "source" : {
+          "url" : "git://github.com/moodle/moodle.git",
+          "type" : "git",
+          "reference" : "v2.4.3"
         }
+      }
+    }, 
+    "pear/pear_exception" : {
+      "dev-master" : {
+        "name" : "pear/pear_exception", 
+        "type" : "library", 
+        "version" : "dev-master", 
+        "dist" : {
+          "url" : "https://github.com/pear/PEAR_Exception/archive/master.zip", 
+          "type" : "zip"
+        }, 
+        "source" : {
+          "url" : "git://github.com/pear/PEAR_Exception.git", 
+          "type" : "git", 
+          "reference" : "master"
+        }, 
+        "autoload": {
+           "psr-0": { "PEAR": "" }
+        }, 
+        "include-path": [""]
+      }
+    }, 
+    "covex-nn/phpcb" : {
+      "1.0.3" : {
+        "name" : "covex-nn/phpcb", 
+        "type" : "library", 
+        "version" : "1.0.3", 
+        "require" : {
+          "pear/console_commandline": "dev-trunk",
+          "phpunit/php-file-iterator" : "1.3.*",
+          "pear/log" : "dev-master"
+        }, 
+        "dist" : {
+          "url" : "https://github.com/covex-nn/PHP_CodeBrowser/archive/composer.zip", 
+          "type" : "zip"
+        }, 
+        "source" : {
+          "url" : "git://github.com/covex-nn/PHP_CodeBrowser.git", 
+          "type" : "git", 
+          "reference" : "composer"
+        }, 
+        "autoload" : {
+          "classmap" : [ "src/" ]
+        },
+        "include-path": [ "src/" ],
+        "bin" : [ "bin/phpcb" ]
       }
     }
   }
