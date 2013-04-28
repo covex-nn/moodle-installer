@@ -37,7 +37,7 @@ class Developer
     }
     
     foreach ($extraFolders as $folder => $developFolder) {
-      MoodleInstaller::createSymlink($developFolder, $moodleDir . "/" . $folder);
+      MoodleInstaller::symlink($developFolder, $moodleDir . "/" . $folder);
     }
   }
   
