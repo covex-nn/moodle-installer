@@ -4,8 +4,7 @@
   "type": "composer-installer",
   "license": "MIT",
   "require" : {
-    "php" : ">=5.3.3", 
-    "covex-nn/joos" : ">=3.0.9"
+    "php" : ">=5.3.3"
   }, 
   "require-dev" : {
     "composer/composer": "1.0.*@dev", 

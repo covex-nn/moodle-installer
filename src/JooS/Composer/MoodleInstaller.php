@@ -8,8 +8,6 @@ use Composer\Installer\LibraryInstaller;
 use Composer\Package\PackageInterface;
 use Composer\Repository\InstalledRepositoryInterface;
 
-use JooS\Files;
-
 class MoodleInstaller extends LibraryInstaller
 {
   
@@ -148,7 +146,7 @@ class MoodleInstaller extends LibraryInstaller
     $extraFolders = $this->_getExtraFolders($package);
     foreach ($extraFolders as $folder => $vendorPath) {
       if (file_exists($vendorPath)) {
-        self::createSymlink($vendorPath, $folder);
+        self::symlink($vendorPath, $folder);
       }
     }
   }
@@ -162,53 +160,12 @@ class MoodleInstaller extends LibraryInstaller
    */
   private function _removeMoodleCode(PackageInterface $package)
   {
-    $files = new Files();
-    
     $extraFolders = $this->_getExtraFolders($package);
     foreach (array_keys($extraFolders) as $folder) {
-      if (file_exists($folder)) {
-        $files->delete($folder);
+      if (file_exists($folder) && is_link($folder)) {
+        self::removeSymlink($folder);
       }
     }
-  }
-  
-  /**
-   * Create symlink
-   * 
-   * @param type $target Source
-   * @param type $link   Destination link
-   * 
-   * @return boolean
-   */
-  public static function createSymlink($target, $link)
-  {
-    if (file_exists($link)) {
-      return false;
-    }
-
-    $parts = explode("/", $link);
-    array_pop($parts);
-    
-    $create = array();
-    while (sizeof($parts)) {
-      $path = implode("/", $parts);
-
-      if (file_exists($path)) {
-        break;
-      } else {
-        $create[] = array_pop($parts);
-        if (!sizeof($parts)) {
-          $path = ".";
-        }
-      }
-    }
-    
-    foreach (array_reverse($create) as $folder) {
-      $path .= "/" . $folder;
-      mkdir($path, 0777);
-    }
-    
-    return symlink(realpath($target), $link);
   }
   
   /**
@@ -260,6 +217,71 @@ class MoodleInstaller extends LibraryInstaller
       $moodleDir = "www";
     }
     return $moodleDir;
+  }
+  
+  /**
+   * Create symlink
+   * 
+   * @param type $target Source
+   * @param type $link   Destination link
+   * 
+   * @return boolean
+   */
+  public static function symlink($target, $link)
+  {
+    if (file_exists($link)) {
+      return false;
+    }
+
+    $parts = explode("/", $link);
+    array_pop($parts);
+    
+    $create = array();
+    while (sizeof($parts)) {
+      $path = implode("/", $parts);
+
+      if (file_exists($path)) {
+        break;
+      } else {
+        $create[] = array_pop($parts);
+        if (!sizeof($parts)) {
+          $path = ".";
+        }
+      }
+    }
+    
+    foreach (array_reverse($create) as $folder) {
+      $path .= "/" . $folder;
+      mkdir($path, 0777);
+    }
+    
+    return symlink(realpath($target), $link);
+  }
+  
+  /**
+   * Delete symlink
+   * 
+   * @param string $link Path to link
+   * 
+   * @return null
+   */
+  public static function removeSymlink($link)
+  {
+    clearstatcache();
+    $target = @readlink($link);
+    if ($target !== false) {
+      do {
+        $newTarget = dirname($target) . "/" . uniqid(basename($target));
+      } while (file_exists($newTarget));
+
+      rename($target, $newTarget);
+    }
+    if (!@rmdir($link)) {
+      unlink($link);
+    }
+    if ($target !== false) {
+      rename($newTarget, $target);
+    }
   }
   
 }
