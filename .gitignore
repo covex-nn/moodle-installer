@@ -1,6 +1,8 @@
-/bin
-/composer.lock
-/nbproject
-/target
-/vendor
-/www
+bin
+build
+build.local.properties
+composer.lock
+nbproject
+target
+vendor
+www
