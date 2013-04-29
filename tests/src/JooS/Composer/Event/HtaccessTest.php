@@ -2,15 +2,15 @@
 
 namespace JooS\Composer\Event;
 
-use JooS\Stream\Wrapper_FS;
+use JooS\Files;
 
 class HtaccessTest extends \PHPUnit_Framework_TestCase
 {
   
   /**
-   * @var Htaccess
+   * @var Files
    */
-  private $_htaccess;
+  private $_files;
   
   /**
    * Test contents
@@ -19,66 +19,46 @@ class HtaccessTest extends \PHPUnit_Framework_TestCase
    */
   public function testEmptyContent()
   {
-    $path = $this->_htaccessPath();
+    $path = $this->_files->tempnam();
+    $htaccess = new Htaccess($path);
     
-    $this->assertEquals($path, $this->_htaccess->getPath());
-    $this->assertTrue(!$this->_htaccess->exists());
-    $this->assertTrue($this->_htaccess->writable());
-    $this->assertEquals("", $this->_htaccess->getContents());
-    $this->assertEquals(array(), $this->_htaccess->getContentsArray());
+    $this->assertEquals($path, $htaccess->getPath());
+    $this->assertTrue(!$htaccess->exists());
+    $this->assertTrue($htaccess->writable());
+    $this->assertEquals("", $htaccess->getContents());
+    $this->assertEquals(array(), $htaccess->getContentsArray());
     
     $denyFromAll = "Deny from all";
     $expected = array($denyFromAll);
 
     file_put_contents($path, $denyFromAll);
-    $this->assertEquals($expected, $this->_htaccess->getContentsArray());
+    $this->assertEquals($expected, $htaccess->getContentsArray());
 
     file_put_contents($path, $denyFromAll . "\n");
-    $this->assertEquals($expected, $this->_htaccess->getContentsArray());
+    $this->assertEquals($expected, $htaccess->getContentsArray());
   }
   
   public function testAppend()
   {
+    $path = $this->_files->tempnam();
+    $htaccess = new Htaccess($path);
+    
     $denyFromAll = "Deny from all";
-    $this->_htaccess->append($denyFromAll);
-    $this->assertEquals($denyFromAll . PHP_EOL, $this->_htaccess->getContents());
+    $htaccess->append($denyFromAll);
+    $this->assertEquals($denyFromAll . PHP_EOL, $htaccess->getContents());
 
-    $this->_htaccess->append($denyFromAll);
-    $this->assertEquals($denyFromAll . PHP_EOL, $this->_htaccess->getContents());
+    $htaccess->append($denyFromAll);
+    $this->assertEquals($denyFromAll . PHP_EOL, $htaccess->getContents());
   }
   
-  /**
-   * Sets up the fixture, for example, open a network connection.
-   * 
-   * This method is called before a test is executed.
-   *
-   * @return null
-   */
   protected function setUp()
   {
-    Wrapper_FS::register("htaccess");
-    mkdir("htaccess://folder");
-    
-    $this->_htaccess = new Htaccess(
-      $this->_htaccessPath()
-    );
+    $this->_files = new Files;
   }
   
-  /**
-   * Tears down the fixture, for example, close a network connection.
-   * 
-   * This method is called after a test is executed.
-   * 
-   * @return null
-   */
   protected function tearDown()
   {
-    Wrapper_FS::unregister("htaccess");
-  }
-  
-  protected function _htaccessPath()
-  {
-    return "htaccess://folder/.htaccess";
+    unset($this->_files);
   }
   
 }
