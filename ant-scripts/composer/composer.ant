@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+  <property name="system.php" value="php" />
+  <property name="system.composer" value="${user.home}/composer.phar" />
+  <property name="composer.dev" value="--no-dev" />
+  
+  <macrodef name="composer">
+    <attribute name="command" />
+    <attribute name="dir" default="${basedir}" />
+    <attribute name="failonerror" default="true" />
+    <element name="args" optional="true" />
+    
+    <sequential>
+      <exec executable="${system.php}" dir="@{dir}" failonerror="@{failonerror}">
+        <arg value="-d" />
+        <arg value="memory_limit=1024M" />
+        <arg value="${system.composer}" />
+        <arg value="@{command}" />
+        <args />
+      </exec>
+    </sequential>
+  </macrodef>
+  
+  <target name="composer-init">
+    <composer command="update">
+      <args>
+        <arg value="${composer.dev}" />
+      </args>
+    </composer>
+  </target>
+</project>

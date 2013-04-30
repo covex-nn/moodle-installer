@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="covex-nn/moodle-installer - PHP QA Tools" default="init" basedir=".">
+  <import file="build.xml" />
+  <import file="vendor/covex-nn/phpqatools/build.xml" />
+</project>

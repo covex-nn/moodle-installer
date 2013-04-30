@@ -4,7 +4,7 @@ php:
    - 5.3
 
 before_script:
-   - composer update --no-dev
+   - composer require covex-nn/joos=3.0.9 composer/composer=1.0.*@dev theseer/directoryscanner=1.1.0
 
 script:
    - phpunit --coverage-text

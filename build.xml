@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="covex-nn/moodle-installer" default="init" basedir=".">
   <property file="build.local.properties" />
+  <property file="build.properties" />
   
-  <import file="vendor/covex-nn/phpqatools/build.xml" />
+  <import file="${lib.path.composer}/composer.ant" />
   
-  <target name="init">
+  <target name="init" depends="composer-init">
     <echo message="${ant.project.name} Init - OK" />
   </target>
 </project>
