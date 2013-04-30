@@ -9,14 +9,10 @@
   "require-dev" : {
     "composer/composer": "1.0.*@dev", 
     "covex-nn/joos" : ">=3.0.9", 
-    "covex-nn/phpqatools" : ">=1.0.0", 
-    "theseer/directoryscanner" : "1.1.0"
+    "theseer/directoryscanner" : "1.1.0", 
+    "covex-nn/phpqatools" : ">=1.0.0"
   },
   "repositories": [
-    {
-      "type" : "git", 
-      "url" : "https://github.com/composer/composer"
-    }, 
     { "type" : "composer", "url" : "https://raw.github.com/covex-nn/phpqatools/master" }
   ], 
   "authors": [
