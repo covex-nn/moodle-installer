@@ -4,8 +4,8 @@ php:
    - 5.3
 
 before_script:
-   - composer require covex-nn/joos=3.0.9 composer/composer=1.0.*@dev theseer/directoryscanner=1.1.0 --no-update
-   - composer update --no-dev --prefer-dist
+   - composer require covex-nn/joos=4.0.0 composer/composer=1.0.*@dev theseer/directoryscanner=1.1.0 --no-update
+   - composer update --no-dev --prefer-source
 
 script:
    - phpunit --coverage-text 
