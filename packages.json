@@ -18,10 +18,10 @@
           "reference" : "v2.4.3"
         }
       }, 
-      "2.4.3.20130502" : {
+      "2.4.3.11" : {
         "name" : "moodle/moodle", 
         "type" : "moodle-source", 
-        "version" : "2.4.3.20130502", 
+        "version" : "2.4.3.11", 
         "require" : {
           "covex-nn/moodle-installer": ">=1.2.3"
         }, 
