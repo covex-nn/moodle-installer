@@ -3,13 +3,14 @@ language: php
 php:
    - 5.3
 
+env:
+   global:
+      - secure: "CDRGgCWwPVmRL4vMpbRvu3+dN7QvvSb/8oeyhtbB7cBh7n5JNbcmEIrb/RpC\nAIjF7RT6GADGtVBbi9HygsgLpv2VitFjjvUBdmIvZW972BxjzLyp7V/BiRq1\nL/08L7mqZIApIK21lqF2PxxTsLHkN7tk/AXoEQ8JbE0Ns0xPiDA="
+
 before_script:
-   - composer require covex-nn/joos=4.0.0 composer/composer=1.0.*@dev theseer/directoryscanner=1.1.0 --no-update
-   - composer update --no-dev --prefer-source
+   - wget http://getcomposer.org/composer.phar
+   - php composer.phar config github-oauth.github.com $GITHUB_OAUTH_TOKEN
+   - ant -Dsystem.composer=composer.phar 
 
 script:
-   - phpunit --coverage-text 
-
-notifications:
-   email:
-      - covex.mobile@gmail.com
+   - ant -f build-dev.xml CI-phpunit
