@@ -10,7 +10,7 @@ env:
 before_script:
    - wget http://getcomposer.org/composer.phar
    - php composer.phar config github-oauth.github.com $GITHUB_OAUTH_TOKEN
-   - ant -Dsystem.composer=composer.phar 
+   - ant -Dsystem.composer=composer.phar -Dcomposer.dev=--dev
 
 script:
    - ant -f build-dev.xml CI-phpunit
