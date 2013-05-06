@@ -2,11 +2,8 @@
 
 namespace JooS\Composer;
 
-use Composer\IO\IOInterface;
-use Composer\Composer;
 use Composer\Installer\LibraryInstaller;
 use Composer\Package\PackageInterface;
-use Composer\Repository\InstalledRepositoryInterface;
 
 class MoodleInstaller extends LibraryInstaller
 {
@@ -54,32 +51,6 @@ class MoodleInstaller extends LibraryInstaller
         $installPath = parent::getInstallPath($package);
     }
     return $installPath;
-  }
-  
-  /**
-   * Updates specific package.
-   *
-   * @param InstalledRepositoryInterface $repo    repository in which to check
-   * @param PackageInterface             $initial already installed package version
-   * @param PackageInterface             $target  updated version
-   *
-   * @return null
-   * @throws InvalidArgumentException if $from package is not installed
-   */
-  public function update(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target)
-  {
-    if ($initial->getType() == self::TYPE_MOODLE_SOURCE) {
-      $packages = $repo->search(
-        array("type" => self::TYPE_MOODLE_PACKAGE)
-      );
-      if (sizeof($packages)) {
-        throw new \InvalidArgumentException(
-          "Package '" . self::TYPE_MOODLE_SOURCE . "' can not be upgraded. " . 
-          "Uninstall all packages '" . self::TYPE_MOODLE_PACKAGE . "' first"
-        );
-      }
-    }
-    parent::update($repo, $initial, $target);
   }
   
   /**
@@ -162,9 +133,7 @@ class MoodleInstaller extends LibraryInstaller
   {
     $extraFolders = $this->_getExtraFolders($package);
     foreach (array_keys($extraFolders) as $folder) {
-      if (file_exists($folder) && is_link($folder)) {
-        self::removeSymlink($folder);
-      }
+      self::removeSymlink($folder);
     }
   }
   
@@ -211,7 +180,7 @@ class MoodleInstaller extends LibraryInstaller
   private function _getMoodleDir()
   {
     $composer = $this->composer;
-    /* @var $composer Composer */
+    /* @var $composer \Composer\Composer */
     $moodleDir = $composer->getConfig()->get(self::MOODLE_DIR);
     if (!$moodleDir) {
       $moodleDir = "www";
@@ -268,19 +237,25 @@ class MoodleInstaller extends LibraryInstaller
   public static function removeSymlink($link)
   {
     clearstatcache();
-    $target = @readlink($link);
-    if ($target !== false) {
-      do {
-        $newTarget = dirname($target) . "/" . uniqid(basename($target));
-      } while (file_exists($newTarget));
+    if (file_exists($link) && is_link($link)) {
+      $target = @readlink($link);
+      if (!file_exists($target)) {
+        $target = false;
+      }
+      
+      if ($target !== false) {
+        do {
+          $newTarget = dirname($target) . "/" . uniqid(basename($target));
+        } while (file_exists($newTarget));
 
-      rename($target, $newTarget);
-    }
-    if (!@rmdir($link)) {
-      unlink($link);
-    }
-    if ($target !== false) {
-      rename($newTarget, $target);
+        rename($target, $newTarget);
+      }
+      if (!@rmdir($link)) {
+        unlink($link);
+      }
+      if ($target !== false) {
+        rename($newTarget, $target);
+      }
     }
   }
   
