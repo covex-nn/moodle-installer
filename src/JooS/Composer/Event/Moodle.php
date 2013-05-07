@@ -212,9 +212,10 @@ class Moodle
     }
     
     self::setConfigContent($configContent);
-    $event->getIO()->write(
-      "covex-nn/moodle-installer: config.php saved"
-    );
+    
+    if (!is_null($configContent)) {
+      $event->getIO()->write("moodle-installer: config.php saved");
+    }
   }
   
   /**
@@ -230,9 +231,7 @@ class Moodle
       if (!file_exists($configPhp)) {
         file_put_contents($configPhp, $configContent);
         
-        $event->getIO()->write(
-          "covex-nn/moodle-installer: config.php restored"
-        );
+        $event->getIO()->write("moodle-installer: config.php restored");
       }
     }
   }
