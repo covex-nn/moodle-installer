@@ -9,7 +9,6 @@
   "require-dev" : {
     "composer/composer": "1.0.*@dev", 
     "covex-nn/joos" : "~4.0", 
-    "theseer/directoryscanner" : "~1.1", 
     "covex-nn/phpqatools" : "~1.0"
   },
   "repositories": [
@@ -28,7 +27,7 @@
   "extra": {
     "class": "JooS\\Composer\\MoodleInstaller", 
     "branch-alias": {
-      "dev-master": "1.3.x-dev"
+      "dev-master": "2.0.x-dev"
     }
   }, 
   "config": {
