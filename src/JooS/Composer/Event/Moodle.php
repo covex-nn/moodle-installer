@@ -24,11 +24,12 @@ class Moodle
   public static function removeSymlinks(Event $event)
   {
     $extraFolders = self::_getExtraFolders($event);
-    foreach (array_keys($extraFolders) as $folder) {
-      self::removeSymlink($folder);
-      $event->getIO()->write(
-        "- [moodle-installer] symlink '$folder' removed"
-      );
+    if (sizeof($extraFolders)) {
+      $event->getIO()->write("moodle-installer:");
+      foreach (array_keys($extraFolders) as $folder) {
+        self::removeSymlink($folder);
+        $event->getIO()->write("- symlink '$folder' removed");
+      }
     }
   }
   
@@ -42,11 +43,12 @@ class Moodle
   public static function createSymlinks(Event $event)
   {
     $extraFolders = self::_getExtraFolders($event);
-    foreach ($extraFolders as $folder => $developFolder) {
-      self::symlink($developFolder, $folder);
-      $event->getIO()->write(
-        "- [moodle-installer] symlink '$folder' => '$developFolder' created"
-      );
+    if (sizeof($extraFolders)) {
+      $event->getIO()->write("moodle-installer:");
+      foreach ($extraFolders as $folder => $developFolder) {
+        self::symlink($developFolder, $folder);
+        $event->getIO()->write("- symlink '$folder' => '$developFolder' created");
+      }
     }
   }
 
@@ -214,9 +216,8 @@ class Moodle
     self::setConfigContent($configContent);
     
     if (!is_null($configContent)) {
-      $event->getIO()->write(
-        "- [moodle-installer] config.php saved"
-      );
+      $event->getIO()->write("moodle-installer:");
+      $event->getIO()->write("- config.php saved");
     }
   }
   
@@ -235,9 +236,8 @@ class Moodle
       if (!file_exists($configPhp)) {
         file_put_contents($configPhp, $configContent);
         
-        $event->getIO()->write(
-          "- [moodle-installer] config.php restored"
-        );
+        $event->getIO()->write("moodle-installer:");
+        $event->getIO()->write("- config.php restored");
       }
     }
   }
