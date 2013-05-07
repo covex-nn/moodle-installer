@@ -26,6 +26,9 @@ class Moodle
     $extraFolders = self::_getExtraFolders($event);
     foreach (array_keys($extraFolders) as $folder) {
       self::removeSymlink($folder);
+      $event->getIO()->write(
+        "moodle-installer: symlink '$folder' removed"
+      );
     }
   }
   
@@ -41,6 +44,9 @@ class Moodle
     $extraFolders = self::_getExtraFolders($event);
     foreach ($extraFolders as $folder => $developFolder) {
       self::symlink($developFolder, $folder);
+      $event->getIO()->write(
+        "moodle-installer: symlink '$folder' => '$developFolder' created"
+      );
     }
   }
 
@@ -206,6 +212,9 @@ class Moodle
     }
     
     self::setConfigContent($configContent);
+    $event->getIO()->write(
+      "covex-nn/moodle-installer: config.php saved"
+    );
   }
   
   /**
@@ -220,6 +229,10 @@ class Moodle
       $configPhp = self::_getMoodleDir($event, "config.php");
       if (!file_exists($configPhp)) {
         file_put_contents($configPhp, $configContent);
+        
+        $event->getIO()->write(
+          "covex-nn/moodle-installer: config.php restored"
+        );
       }
     }
   }
