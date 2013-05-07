@@ -233,7 +233,7 @@ class Moodle
     $configContent = self::getConfigContent();
     if (!is_null($configContent)) {
       $configPhp = self::_getMoodleDir($event, "config.php");
-      if (!file_exists($configPhp)) {
+      if (!file_exists($configPhp) && is_writable(dirname($configPhp))) {
         file_put_contents($configPhp, $configContent);
         
         $event->getIO()->write("moodle-installer:");
