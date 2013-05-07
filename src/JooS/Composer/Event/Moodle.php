@@ -223,7 +223,9 @@ class Moodle
   /**
    * Restore www/config.php
    * 
-   * @param \Composer\Script\Event $event
+   * @param \Composer\Script\Event $event Event
+   * 
+   * @return null
    */
   public static function restoreConfig(Event $event)
   {
