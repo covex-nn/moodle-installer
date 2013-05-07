@@ -254,7 +254,7 @@ class Moodle
    * 
    * @return string
    */
-  private function _getMoodleDir(Event $event, $filename = null)
+  private static function _getMoodleDir(Event $event, $filename = null)
   {
     $config = $event->getComposer()->getConfig();
     $moodleDir = $config->get(MoodleInstaller::MOODLE_DIR);
