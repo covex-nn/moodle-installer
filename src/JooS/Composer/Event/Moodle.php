@@ -47,7 +47,7 @@ class Moodle
       $event->getIO()->write("moodle-installer:");
       foreach ($extraFolders as $folder => $developFolder) {
         self::symlink($developFolder, $folder);
-        $event->getIO()->write("- symlink '$folder' => '$developFolder' created");
+        $event->getIO()->write("- symlink '$folder' created");
       }
     }
   }
@@ -233,11 +233,22 @@ class Moodle
     $configContent = self::getConfigContent();
     if (!is_null($configContent)) {
       $configPhp = self::_getMoodleDir($event, "config.php");
-      if (!file_exists($configPhp) && is_writable(dirname($configPhp))) {
-        file_put_contents($configPhp, $configContent);
+      if (!file_exists($configPhp)) {
+        $canRestore = true;
+        $configDir = dirname($configPhp);
+        if (!file_exists($configDir)) {
+          if (@!mkdir($configDir, 0777, true)) {
+            $canRestore = false;
+          }
+        }
         
         $event->getIO()->write("moodle-installer:");
-        $event->getIO()->write("- config.php restored");
+        if ($canRestore && is_writable($configDir)) {
+          file_put_contents($configPhp, $configContent);
+          $event->getIO()->write("- config.php restored");
+        } else {
+          $event->getIO()->write("- config.php could not be restored");
+        }
       }
     }
   }
