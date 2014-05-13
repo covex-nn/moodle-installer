@@ -6,48 +6,48 @@ use Composer\Script\Event;
 
 class Htaccess
 {
-  
+
   /**
    * Create .htaccess and write 'Deny from all'
-   * 
+   *
    * @param Event $event Event
-   * 
+   *
    * @return null
    */
   public static function denyFromAll(Event $event)
   {
     $composer = $event->getComposer();
-    
+
     $vendor = $composer->getConfig()->get("vendor-dir");
     $path =  $vendor . "/.htaccess";
 
     $htaccess = new self($path);
     $htaccess->append("Deny from all");
-    
+
     $composerIo = $event->getIO();
     $composerIo->write("File " . $path . " created, HTTP access denied");
   }
-  
+
   /**
    * @var string
    */
-  private $_path;
-  
+  private $path;
+
   /**
    * Public functructor
-   * 
+   *
    * @param string $path Path to .htaccess
    */
   public function __construct($path)
   {
-    $this->_setPath($path);
+    $this->setPath($path);
   }
 
   /**
    * Append string to .htaccess
-   * 
+   *
    * @param string $string .htaccess instruction
-   * 
+   *
    * @return boolean
    * @todo сделать более интеллектуальненько, чтоли =)
    */
@@ -57,17 +57,17 @@ class Htaccess
     if (!in_array($string, $array)) {
       $array[] = $string;
     }
-    return $this->_write($array);
+    return $this->write($array);
   }
-  
+
   /**
    * Write contents to file
-   * 
+   *
    * @param string $contents Contents
-   * 
+   *
    * @return boolean
    */
-  protected function _write($contents)
+  protected function write($contents)
   {
     if (is_array($contents)) {
       $contents = implode(PHP_EOL, $contents) . PHP_EOL;
@@ -80,13 +80,13 @@ class Htaccess
     } else {
       $result = false;
     }
-    
+
     return $result;
   }
-  
+
   /**
    * Return file contents
-   * 
+   *
    * @return string
    */
   public function getContents()
@@ -99,16 +99,16 @@ class Htaccess
     }
     return $contents;
   }
-  
+
   /**
    * Return file contents as array
-   * 
+   *
    * @return string
    */
   public function getContentsArray()
   {
     $contents = $this->getContents();
-    
+
     $lines = explode(PHP_EOL, $contents);
     foreach ($lines as $key => $value) {
       $value = trim($value);
@@ -120,10 +120,10 @@ class Htaccess
     }
     return array_values($lines);
   }
-  
+
   /**
    * Return if file exists
-   * 
+   *
    * @return boolean
    */
   public function exists()
@@ -131,10 +131,10 @@ class Htaccess
     $path = $this->getPath();
     return file_exists($path);
   }
-  
+
   /**
    * Return if file writable
-   * 
+   *
    * @return boolean
    */
   public function writable()
@@ -148,29 +148,28 @@ class Htaccess
     }
     return $writable;
   }
-  
+
   /**
    * Return path to .htaccess
-   * 
+   *
    * @return string
    */
   public function getPath()
   {
-    return $this->_path;
+    return $this->path;
   }
-  
+
   /**
    * Set path to .htaccess
-   * 
+   *
    * @param string $path Path to .htaccess
-   * 
+   *
    * @return Htaccess
    */
-  protected function _setPath($path)
+  protected function setPath($path)
   {
-    $this->_path = $path;
-    
+    $this->path = $path;
+
     return $this;
   }
-  
 }

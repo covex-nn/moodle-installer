@@ -7,18 +7,18 @@ use Composer\Package\PackageInterface;
 
 class MoodleInstaller extends LibraryInstaller
 {
-  
+
   const MOODLE_MODULES = "moodle-modules";
   const MOODLE_DIR = "moodle-dir";
-  
+
   const TYPE_MOODLE_PACKAGE = "moodle-package";
   const TYPE_MOODLE_SOURCE = "moodle-source";
-  
+
   /**
    * Decides if the installer supports the given type
    *
    * @param string $packageType Package type
-   * 
+   *
    * @return boolean
    */
   public function supports($packageType)
@@ -33,32 +33,32 @@ class MoodleInstaller extends LibraryInstaller
     }
     return $supports;
   }
-  
+
   /**
    * Returns the installation path of a package
    *
    * @param PackageInterface $package Package
-   * 
+   *
    * @return string
    */
   protected function getPackageBasePath(PackageInterface $package)
   {
     switch ($package->getType()) {
       case self::TYPE_MOODLE_SOURCE:
-        $basePath = $this->_getMoodleDir();
+        $basePath = $this->getMoodleDir();
         break;
       default:
         $basePath = parent::getPackageBasePath($package);
     }
     return $basePath;
   }
-  
+
   /**
    * Return moodle installation dir
-   * 
+   *
    * @return string
    */
-  private function _getMoodleDir()
+  private function getMoodleDir()
   {
     $composer = $this->composer;
     /* @var $composer \Composer\Composer */
@@ -68,5 +68,4 @@ class MoodleInstaller extends LibraryInstaller
     }
     return $moodleDir;
   }
-
 }

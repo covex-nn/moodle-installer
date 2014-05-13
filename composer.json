@@ -11,9 +11,6 @@
     "covex-nn/joos" : "~4.0", 
     "covex-nn/phpqatools" : "~1.0"
   },
-  "repositories": [
-    { "type" : "composer", "url" : "https://raw.github.com/covex-nn/phpqatools/master" }
-  ], 
   "authors": [
     {
       "name": "Andrey F. Mindubaev",
