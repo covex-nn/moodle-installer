@@ -15,11 +15,7 @@ class MoodleInstaller extends LibraryInstaller
   const TYPE_MOODLE_SOURCE = "moodle-source";
 
   /**
-   * Decides if the installer supports the given type
-   *
-   * @param string $packageType Package type
-   *
-   * @return boolean
+   * {@inheritdoc}
    */
   public function supports($packageType)
   {
@@ -35,22 +31,27 @@ class MoodleInstaller extends LibraryInstaller
   }
 
   /**
-   * Returns the installation path of a package
-   *
-   * @param PackageInterface $package Package
-   *
-   * @return string
+   * {@inheritdoc}
    */
-  protected function getPackageBasePath(PackageInterface $package)
+  public function getInstallPath(PackageInterface $package)
   {
     switch ($package->getType()) {
       case self::TYPE_MOODLE_SOURCE:
         $basePath = $this->getMoodleDir();
         break;
       default:
-        $basePath = parent::getPackageBasePath($package);
+        $basePath = parent::getInstallPath($package);
     }
+
     return $basePath;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getPackageBasePath(PackageInterface $package)
+  {
+    return $this->getInstallPath($package);
   }
 
   /**
