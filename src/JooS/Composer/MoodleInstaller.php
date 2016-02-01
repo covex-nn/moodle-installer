@@ -51,7 +51,15 @@ class MoodleInstaller extends LibraryInstaller
    */
   protected function getPackageBasePath(PackageInterface $package)
   {
-    return $this->getInstallPath($package);
+    switch ($package->getType()) {
+      case self::TYPE_MOODLE_SOURCE:
+        $basePath = $this->getMoodleDir();
+        break;
+      default:
+        $basePath = parent::getPackageBasePath($package);
+    }
+
+    return $basePath;
   }
 
   /**
