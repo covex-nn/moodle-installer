@@ -1,7 +1,7 @@
 {
     "name": "covex-nn/moodle-installer",
     "description" : "Composer installer for moodle packages",
-    "type": "composer-installer",
+    "type": "composer-plugin",
     "license": "MIT",
     "require" : {
         "php" : ">=5.3.3",
@@ -23,9 +23,9 @@
         "psr-0": { "JooS\\Composer\\": "src/" }
     },
     "extra": {
-        "class": "JooS\\Composer\\MoodleInstaller",
+        "class": "JooS\\Composer\\Plugin",
         "branch-alias": {
-            "dev-master": "2.0.x-dev"
+            "dev-master": "3.0.x-dev"
         }
     },
     "config": {
