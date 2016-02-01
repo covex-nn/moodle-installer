@@ -5,6 +5,7 @@
     "license": "MIT",
     "require" : {
         "php" : ">=5.3.3",
+        "composer-plugin-api": "~1.0",
         "symfony/filesystem": "~2.3"
     },
     "require-dev" : {
