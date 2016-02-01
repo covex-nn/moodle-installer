@@ -5,6 +5,7 @@ namespace JooS\Composer\Event;
 use Composer\Script\Event;
 use Composer\Package\PackageInterface;
 use JooS\Composer\MoodleInstaller;
+use Symfony\Component\Filesystem\Filesystem;
 
 class Moodle
 {
@@ -62,34 +63,27 @@ class Moodle
    */
   public static function symlink($target, $link)
   {
+    $target1 = $target;
     if (file_exists($link)) {
       return false;
     }
 
-    $path = null;
-    $parts = explode("/", $link);
-    array_pop($parts);
+    $linkDir = dirname($link);
+    $filesystem = new Filesystem();
+    $filesystem->mkdir($linkDir);
 
-    $create = array();
-    while (sizeof($parts)) {
-      $path = implode("/", $parts);
+    $target = realpath($target);
+    $dir = getcwd();
+    chdir($linkDir);
 
-      if (file_exists($path)) {
-        break;
-      } else {
-        $create[] = array_pop($parts);
-        if (!sizeof($parts)) {
-          $path = ".";
-        }
-      }
-    }
+    $target = $filesystem->makePathRelative($target, $linkDir);
+    $target = trim($target, "\\/");
+    $target = str_replace("/", DIRECTORY_SEPARATOR, $target);
 
-    foreach (array_reverse($create) as $folder) {
-      $path .= "/" . $folder;
-      mkdir($path, 0777);
-    }
+    symlink($target, basename($link));
+    chdir($dir);
 
-    return symlink(realpath($target), $link);
+    return true;
   }
 
   /**
@@ -291,7 +285,7 @@ class Moodle
     $config = $event->getComposer()->getConfig();
     $moodleDir = $config->get(MoodleInstaller::MOODLE_DIR);
     if (!$moodleDir) {
-      $moodleDir = "www";
+      $moodleDir = "web";
     }
     if (!is_null($filename)) {
       $moodleDir .= "/" . $filename;

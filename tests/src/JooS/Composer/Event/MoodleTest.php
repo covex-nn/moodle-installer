@@ -5,7 +5,6 @@ namespace JooS\Composer\Event;
 use Composer\Composer;
 use Composer\Config;
 use Composer\Script\Event;
-
 use JooS\Composer\MoodleInstaller;
 use JooS\Files;
 
@@ -29,13 +28,14 @@ class MoodleTest extends \PHPUnit_Framework_TestCase
 
     $result = Moodle::symlink($target, $link);
     $this->assertTrue($result);
-
     $this->assertFileExists($target);
-    $this->assertFileExists($link);
     $this->assertTrue(is_link($link));
 
+    $linkDir = dirname($link);
     $readLink = readlink($link);
-    $this->assertEquals(realpath($target), realpath($readLink));
+    $linkedTarget = $linkDir . "/". $readLink;
+
+    $this->assertFileExists($linkedTarget);
 
     Moodle::removeSymlink($link);
 
@@ -64,10 +64,8 @@ class MoodleTest extends \PHPUnit_Framework_TestCase
    */
   public function fsTargets()
   {
-    $files = $this->getFsFiles();
-
-    $dir = $files->mkdir();
-    $targetDir = $files->mkdir();
+    $dir = $this->mkdir();
+    $targetDir = $this->mkdir();
     $targetFile = $dir . "/file1.txt";
     $contentFile = "qwerty";
     file_put_contents($targetFile, $contentFile);
@@ -103,7 +101,7 @@ class MoodleTest extends \PHPUnit_Framework_TestCase
    */
   public function testCreateRemoveSymlinks()
   {
-    $root = $this->files->mkdir();
+    $root = $this->mkdir();
     $folder = "test/folder";
     $target = __DIR__;
 
@@ -145,7 +143,7 @@ class MoodleTest extends \PHPUnit_Framework_TestCase
    */
   public function testSaveRestoreConfig()
   {
-    $root = $this->files->mkdir();
+    $root = $this->mkdir();
     $folder = "test/folder";
     $target = __DIR__;
 
@@ -242,5 +240,17 @@ class MoodleTest extends \PHPUnit_Framework_TestCase
   protected function tearDown()
   {
     unset($this->files);
+  }
+
+  /**
+   * Create and get realpath to new temporary dir
+   *
+   * @return string
+   */
+  private function mkdir()
+  {
+    $dir = $this->getFsFiles()->mkdir();
+
+    return realpath($dir);
   }
 }
