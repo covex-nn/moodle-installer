@@ -113,9 +113,6 @@ class MoodleTest extends \PHPUnit_Framework_TestCase
 
     $this->assertFileExists($link);
     $this->assertTrue(is_link($link));
-    $this->assertEquals(
-      realpath($target), realpath(readlink($link))
-    );
 
     Moodle::removeSymlinks($event);
 
