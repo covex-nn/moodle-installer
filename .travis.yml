@@ -2,6 +2,7 @@ language: php
 
 php:
    - 5.3
+   - 5.5
 
 env:
    global:
@@ -9,7 +10,7 @@ env:
 
 before_script:
    - wget http://getcomposer.org/composer.phar
-   - sh -c "if $TRAVIS_SECURE_ENV_VARS; then php composer.phar config github-oauth.github.com $GITHUB_OAUTH_TOKEN; fi"
+   - sh -c "if $TRAVIS_SECURE_ENV_VARS; then php composer.phar config github-oauth.github.com $GITHUB_OAUTH_TOKEN; else php composer.phar config preferred-install source; fi"
    - ant -Dsystem.composer=composer.phar -Dcomposer.dev=--dev
 
 script:

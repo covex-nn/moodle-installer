@@ -22,7 +22,7 @@
   </macrodef>
   
   <target name="composer-init">
-    <composer command="update">
+    <composer command="install">
       <args>
         <arg value="${composer.dev}" />
       </args>
